@@ -239,9 +239,13 @@ pre{will-change:rotate,translate,transform;transition:transform 1.8s cubic-bezie
 #sndt{top:calc(23px + env(safe-area-inset-top,0px));padding:7px 14px 7px 12px;border-radius:999px;border:1px solid rgba(232,176,100,.3);background:rgba(24,12,6,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#f0cf9c;letter-spacing:.05em;box-shadow:0 0 16px rgba(232,150,70,.18)}
 #sndt::before{content:"~";margin-right:7px;display:inline-block;animation:tw 1.6s ease-in-out infinite}
 #m .r{background:linear-gradient(90deg,rgba(190,170,150,.2) 0%,rgba(255,222,176,.85) 45%,rgba(232,170,100,.85) 55%,rgba(190,170,150,.2) 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;animation:sh 5s linear infinite}
+body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:5;opacity:.1;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 .85 0 0 0 0 .6 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:gr .9s steps(5) infinite}
+@keyframes gr{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-4%)}60%{transform:translate(-4%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+#wish{position:fixed;top:calc(26px + env(safe-area-inset-top,0px));left:0;right:0;margin:0 auto;width:max-content;max-width:78vw;z-index:4;text-align:center;font:400 14px var(--mf);letter-spacing:.12em;opacity:0;transition:opacity 1.8s ease;pointer-events:none;user-select:none;filter:drop-shadow(0 0 10px rgba(232,160,80,.3));background:linear-gradient(100deg,#8a6b52 0%,#f6d9a6 42%,#e8b26a 52%,#f6d9a6 62%,#8a6b52 100%);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 4.5s linear infinite}
 </style>
 </head>
 <body>
+<div id="wish">~ ขอพรก่อนเป่าเทียนนะ ~</div>
 <canvas id="fx" aria-hidden="true"></canvas>
 <pre id="a" aria-label="Animated ASCII pillar candle reading Happy kaowpun day"></pre>
 <div id="h" style="opacity:0">แตะเพื่อเป่าเทียน</div>
@@ -418,7 +422,7 @@ function loop(now){
  requestAnimationFrame(loop);if(now-last<30)return;const dt=Math.min(100,now-last);last=now;
  if(!entered)T0=now;
  draw(now-T0,dt);
- if(state==='candle'){const rdy=now-T0>8800;hint.style.opacity=rdy?1:0;pre.classList.toggle('rdy',rdy);if(introFrom<0&&sOK())catchUpIntro()}
+ if(state==='candle'){const rdy=now-T0>8800;wish.style.opacity=(entered&&now-T0>7600)?1:0;hint.style.opacity=rdy?1:0;pre.classList.toggle('rdy',rdy);if(introFrom<0&&sOK())catchUpIntro()}
 }
 fit();addEventListener('resize',fit);
 
@@ -511,7 +515,7 @@ function startMusic(g){
   // no gesture yet: start muted (always allowed), then try to unmute; if the browser refuses, keep playing muted
   yt.mute();yt.playVideo();
   setTimeout(()=>{if(muted)return;try{yt.unMute();yt.setVolume(VOL)}catch(e){}
-   setTimeout(()=>{try{if(yt.getPlayerState()!==1){yt.mute();yt.playVideo()}}catch(e){}if(isSilent()&&!muted)setWait(true);else setWait(false)},500)},300);
+   setTimeout(()=>{try{if(yt.getPlayerState()!==1){yt.mute();yt.playVideo()}}catch(e){}if(entered&&isSilent()&&!muted)setWait(true);else setWait(false)},500)},300);
  }catch(e){}
 }
 function unlock(){
@@ -536,7 +540,7 @@ window.onYouTubeIframeAPIReady=function(){
   width:'200',height:'200',videoId:VID,
   playerVars:{autoplay:1,mute:1,loop:1,playlist:VID,controls:0,disablekb:1,fs:0,modestbranding:1,rel:0,playsinline:1,iv_load_policy:3},
   events:{
-   onReady:()=>{ytReady=true;startMusic(gotGesture);setTimeout(()=>{if(isSilent()&&!muted)setWait(true)},1800)},
+   onReady:()=>{ytReady=true;startMusic(gotGesture);setTimeout(()=>{if(entered&&isSilent()&&!muted)setWait(true)},1800)},
    onStateChange:e=>{
     playing=e.data===1;
     if(playing&&!isSilent())setWait(false);
@@ -687,7 +691,7 @@ function blowOut(){
  state='out';canReset=false;clearTimeout(resetT);clearTimeout(typeT);
  tX=performance.now()-T0;smk=[];smkAcc=0;
  actx();if(ac&&ac.state!=='running')ac.resume().then(()=>{SFX.blow();SFX.hiss()}).catch(()=>{});else{SFX.blow();SFX.hiss()}
- hint.style.opacity=0;pre.classList.remove('rdy');
+ hint.style.opacity=0;wish.style.opacity=0;pre.classList.remove('rdy');
  document.body.classList.add('soft');
  fxBurst();typeT=setTimeout(()=>{state='msg';typeMsg();chime()},1500);
  resetT=setTimeout(()=>{hint.textContent='แตะเพื่อดูอีกครั้ง';hint.style.opacity=1;canReset=true;document.body.classList.add('rst')},10500);
@@ -714,10 +718,10 @@ document.body.addEventListener('click',e=>{
 /* ---------- Depth, light & colour layer ---------- */
 const fxc=document.getElementById('fx'),fxx=fxc.getContext('2d');
 let fw=0,fh=0,pmx=0,pmy=0,tmx=0,tmy=0,wL=0,cL=0,fxT=0;
-const FP=[],FB=[];
+const FP=[],FB=[],RP=[],STAR=[],wish=document.getElementById('wish');
 function fxResize(){const d=Math.min(2,devicePixelRatio||1);fw=innerWidth;fh=innerHeight;fxc.width=fw*d;fxc.height=fh*d;fxx.setTransform(d,0,0,d,0,0)}
 fxResize();addEventListener('resize',fxResize);
-for(let i=0;i<54;i++){const z=Math.random();FP.push({x:Math.random(),y:Math.random(),z,r:.8+z*z*10,v:.008+z*.03,ph:Math.random()*6.28,h:Math.random()})}
+for(let i=0;i<54;i++){const z=Math.random();FP.push({x:Math.random(),y:Math.random(),z,r:.8+z*z*10,v:.008+z*.03,ph:Math.random()*6.28,h:Math.random(),c:"+*.':"[Math.random()*5|0]})}
 addEventListener('pointermove',e=>{tmx=(e.clientX/innerWidth-.5)*2;tmy=(e.clientY/innerHeight-.5)*2},{passive:true});
 addEventListener('deviceorientation',e=>{if(e.gamma==null)return;tmx=clamp(e.gamma/30,-1,1);tmy=clamp(((e.beta||0)-45)/30,-1,1)},{passive:true});
 function fxPos(){const r=pre.getBoundingClientRect();return{x:r.left+r.width*(CX/W),y:r.top+r.height*(11/H)}}
@@ -762,13 +766,29 @@ function fxFrame(now){
   const g=fxx.createRadialGradient(sx,sy,0,sx,sy,p.r);
   g.addColorStop(0,'hsla('+hue.toFixed(0)+','+sat+'%,'+lig+'%,'+a.toFixed(3)+')');g.addColorStop(1,'hsla('+hue.toFixed(0)+','+sat+'%,'+lig+'%,0)');
   fxx.fillStyle=g;fxx.beginPath();fxx.arc(sx,sy,p.r,0,6.283);fxx.fill();
+  if(p.z>.45){fxx.font=(8+p.z*9).toFixed(0)+'px ui-monospace,Menlo,Consolas,monospace';fxx.fillStyle='hsla('+hue.toFixed(0)+','+sat+'%,78%,'+Math.min(.9,a*1.7).toFixed(3)+')';fxx.fillText(p.c,sx-3,sy+3)}
  }
  // burst sparks when the candle is blown out
- for(let i=FB.length-1;i>=0;i--){const b=FB[i];b.x+=b.vx;b.y+=b.vy;b.vy+=.03;b.vx*=.985;b.l-=dt/2600;if(b.l<=0){FB.splice(i,1);continue}
+ for(let i=FB.length-1;i>=0;i--){const b=FB[i];b.x+=b.vx;b.y+=b.vy;b.vy+=(b.g===undefined?.03:b.g);b.vx*=.985;b.l-=dt/2600;if(b.l<=0){FB.splice(i,1);continue}
   fxx.fillStyle='hsla('+b.h.toFixed(0)+',90%,68%,'+(b.l*.85).toFixed(3)+')';fxx.beginPath();fxx.arc(b.x,b.y,b.s*b.l+.4,0,6.283);fxx.fill()}
+ for(let i=RP.length-1;i>=0;i--){const r=RP[i],a=(now-r.t)/1100;if(a>=1){RP.splice(i,1);continue}
+  fxx.strokeStyle='rgba(255,196,120,'+((1-a)*.5).toFixed(3)+')';fxx.lineWidth=1.4*(1-a)+.4;fxx.beginPath();fxx.arc(r.x,r.y,8+a*70,0,6.283);fxx.stroke()}
+ if(cL>.5&&Math.random()<dt/3200)STAR.push({x:Math.random()*fw*.8,y:Math.random()*fh*.4,vx:5+Math.random()*4,vy:2+Math.random()*2,l:1});
+ for(let i=STAR.length-1;i>=0;i--){const q=STAR[i];q.x+=q.vx*dt/16;q.y+=q.vy*dt/16;q.l-=dt/1300;if(q.l<=0||q.x>fw+60){STAR.splice(i,1);continue}
+  const gr=fxx.createLinearGradient(q.x,q.y,q.x-q.vx*9,q.y-q.vy*9);gr.addColorStop(0,'rgba(255,232,186,'+(q.l*.9).toFixed(3)+')');gr.addColorStop(1,'rgba(255,200,130,0)');
+  fxx.strokeStyle=gr;fxx.lineWidth=1.5;fxx.beginPath();fxx.moveTo(q.x,q.y);fxx.lineTo(q.x-q.vx*9,q.y-q.vy*9);fxx.stroke()}
  fxx.globalCompositeOperation='source-over';
 }
 requestAnimationFrame(fxFrame);
+// ember trail behind the pointer, ripple + soft tone on every tap
+let lastEm=0;
+addEventListener('pointermove',e=>{if(!entered||FB.length>400)return;const n=performance.now();if(n-lastEm<45)return;lastEm=n;
+ FB.push({x:e.clientX,y:e.clientY,vx:(Math.random()-.5)*.6,vy:-.3-Math.random()*.6,g:-.012,l:.55,s:1+Math.random()*1.6,h:20+Math.random()*26})},{passive:true});
+addEventListener('pointerdown',e=>{if(!entered||performance.now()-T0<700)return;
+ RP.push({x:e.clientX,y:e.clientY,t:performance.now()});
+ for(let i=0;i<10;i++){const a=Math.random()*6.283,v=.5+Math.random()*1.6;FB.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*v,vy:Math.sin(a)*v-.6,g:-.01,l:.7,s:1+Math.random()*1.8,h:18+Math.random()*30})}
+ if(sOK()){const t=ac.currentTime;tone(t,520+Math.random()*220,.5,.012,'sine');nz(t,.05,'bandpass',3000,2000,2,.01,.002)}
+},{passive:true});
 /* extra sound: flame crackle while lit, sparkle chime on blow-out */
 setInterval(()=>{
  if(!sOK()||!entered||state!=='candle'||performance.now()-T0<6600||Math.random()>.4)return;
@@ -789,8 +809,16 @@ function chime(){
   entered=true;T0=performance.now();
   en.classList.add('go');
   try{if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission)DeviceOrientationEvent.requestPermission().catch(()=>{})}catch(err){}
+  setWait(false);
+  try{if(ytReady&&!muted)yt.seekTo(0,true)}catch(err){}
   unlock();
-  setTimeout(()=>{try{if(!muted&&!isSilent())setWait(false)}catch(err){}},600);
+  // the tap itself starts the music: keep trying until it is audible
+  let n=0;const rt2=setInterval(()=>{n++;
+   if(muted){clearInterval(rt2);return}
+   if(!isSilent()){clearInterval(rt2);setWait(false);return}
+   startMusic(true);
+   if(n>=24){clearInterval(rt2);if(isSilent()&&!muted)setWait(true)}
+  },350);
  }
  en.addEventListener('pointerdown',go);
  en.addEventListener('click',go);
