@@ -202,12 +202,51 @@ pre::after{
   user-select:none;
 }
 #m.on .r{opacity:1}
+#enter{
+  position:fixed;inset:0;z-index:50;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);
+  background:radial-gradient(ellipse 76% 66% at 50% 46%,#160d08 0%,var(--bg) 56%,var(--bg-edge) 100%);
+  color:#e8c99a;font:400 17px var(--mf);letter-spacing:.04em;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:opacity .9s ease,visibility .9s;
+}
+#enter.go{opacity:0;visibility:hidden;pointer-events:none}
+#enter .fl{
+  width:14px;height:22px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;
+  background:radial-gradient(ellipse at 50% 70%,#fff3d0 0%,#f5b85c 45%,#d2641c 100%);
+  box-shadow:0 0 22px 6px rgba(240,160,70,.45);
+  animation:fl 1.6s ease-in-out infinite;
+}
+@keyframes fl{0%,100%{transform:scale(1) translateY(0);opacity:.9}50%{transform:scale(1.12,1.18) translateY(-2px);opacity:1}}
+#enter .t{animation:tp 2.4s ease-in-out infinite;text-align:center;line-height:1.7}
+@keyframes tp{0%,100%{opacity:.55}50%{opacity:1}}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+pre{will-change:rotate,translate,transform;transition:transform 1.8s cubic-bezier(.4,0,.2,1),rotate .25s ease-out,translate .25s ease-out}
+
+/* ---- text detail: shimmer, sparkle, ornaments ---- */
+@keyframes sh{from{background-position:100% 0}to{background-position:0 0}}
+@keyframes tw{0%,100%{opacity:.25;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.15) rotate(20deg)}}
+#enter .fl{position:relative}
+#enter .fl::before,#enter .fl::after{content:"";position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:1px solid rgba(232,176,100,.45);animation:pr 2.4s ease-out infinite}
+#enter .fl::after{animation-delay:1.2s}
+#enter .o{width:132px;height:1px;position:relative;background:linear-gradient(90deg,transparent,rgba(232,176,100,.75),transparent)}
+#enter .o::after{content:"*";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1;color:#f6d9a6;background:var(--bg);padding:0 8px;animation:tw 2.2s ease-in-out infinite}
+#enter .t{font-size:21px;font-weight:500;letter-spacing:.07em;background:linear-gradient(100deg,#b98a5c 0%,#ffe7b8 38%,#e8b26a 52%,#ffe7b8 66%,#b98a5c 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(240,170,90,.35));animation:tp 2.4s ease-in-out infinite,sh 4.5s linear infinite}
+#h{width:max-content;max-width:94vw;margin:0 auto;font-size:14px;font-weight:500;letter-spacing:.08em;text-shadow:none;filter:drop-shadow(0 1px 2px rgba(5,2,1,.7)) drop-shadow(0 0 10px rgba(232,160,80,.3));background:linear-gradient(100deg,#8a6b52 0%,#f6d9a6 42%,#e8b26a 52%,#f6d9a6 62%,#8a6b52 100%);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 4s linear infinite}
+#h::before,#h::after{content:"*";display:inline-block;margin:0 9px;font-size:10px;animation:tw 2.2s ease-in-out infinite}
+#h::after{animation-delay:1.1s}
+#sndt{top:calc(23px + env(safe-area-inset-top,0px));padding:7px 14px 7px 12px;border-radius:999px;border:1px solid rgba(232,176,100,.3);background:rgba(24,12,6,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#f0cf9c;letter-spacing:.05em;box-shadow:0 0 16px rgba(232,150,70,.18)}
+#sndt::before{content:"~";margin-right:7px;display:inline-block;animation:tw 1.6s ease-in-out infinite}
+#m .r{background:linear-gradient(90deg,rgba(190,170,150,.2) 0%,rgba(255,222,176,.85) 45%,rgba(232,170,100,.85) 55%,rgba(190,170,150,.2) 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;animation:sh 5s linear infinite}
 </style>
 </head>
 <body>
+<canvas id="fx" aria-hidden="true"></canvas>
 <pre id="a" aria-label="Animated ASCII pillar candle reading Happy kaowpun day"></pre>
 <div id="h" style="opacity:0">แตะเพื่อเป่าเทียน</div>
 <canvas id="pt" aria-hidden="true"></canvas>
+<div id="enter" role="button" tabindex="0" aria-label="P.l tap เปิดเสียงไว้ด้วย"><div class="fl"></div><div class="o"></div><div class="t">P.l tap<br>เปิดเสียงไว้ด้วย</div></div>
 <div id="yt" aria-hidden="true"><div id="ytp"></div></div>
 <button id="snd" type="button" aria-label="เปิด/ปิดเสียง" title="เปิด/ปิดเสียง">
  <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z" fill="currentColor" fill-opacity=".18"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path d="M18.2 6.5a7.8 7.8 0 0 1 0 11"/></svg>
@@ -244,7 +283,7 @@ const empty=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&co[y*W+x]<0;
 const inBody=(x,y)=>y>=Y0&&y<=Y1&&x>=X0&&x<=X1+2;
 const noise=(x,y,t)=>Math.sin(x*1.3+t*.006+y*.7)*Math.sin(y*.9-t*.004+x*.5);
 const pre=document.getElementById('a'),msg=document.getElementById('m'),hint=document.getElementById('h'),wEl=msg.querySelector('.w'),ph=document.getElementById('ph');
-let T0=performance.now(),last=0,parts=[],state='candle',typeT=0,resetT=0,canReset=false,tX=null,smk=[],smkAcc=0;
+let entered=false,T0=performance.now(),last=0,parts=[],state='candle',typeT=0,resetT=0,canReset=false,tX=null,smk=[],smkAcc=0;
 function newP(first){
  return{x:(Math.random()-.5)*7,y:first?YB-Math.random()*12:YB-4-Math.random()*4,v:2.2+Math.random()*3,ph:Math.random()*6.28,b:.74+Math.random()*.26,pk:Math.random()<.16,c:".*+':"[Math.floor(Math.random()*5)]};
 }
@@ -377,6 +416,7 @@ function draw(t,dt){
 }
 function loop(now){
  requestAnimationFrame(loop);if(now-last<30)return;const dt=Math.min(100,now-last);last=now;
+ if(!entered)T0=now;
  draw(now-T0,dt);
  if(state==='candle'){const rdy=now-T0>8800;hint.style.opacity=rdy?1:0;pre.classList.toggle('rdy',rdy);if(introFrom<0&&sOK())catchUpIntro()}
 }
@@ -384,7 +424,7 @@ fit();addEventListener('resize',fit);
 
 /* ---------- Audio: background music (YouTube) + synthesized SFX ---------- */
 const VID='j42Grv2RW-w',VOL=45,sndBtn=document.getElementById('snd'),sndTip=document.getElementById('sndt');
-let yt=null,ytReady=false,playing=false,muted=false,ac=null,mg=null,nb=null,duckT=0;
+let gotGesture=false,yt=null,ytReady=false,playing=false,muted=false,ac=null,mg=null,nb=null,duckT=0;
 const AC=window.AudioContext||window.webkitAudioContext;
 function actx(){
  if(!ac&&AC){
@@ -463,36 +503,43 @@ function catchUpIntro(){
 }
 function duck(){if(!yt||!ytReady)return;try{yt.setVolume(22)}catch(e){}clearTimeout(duckT);duckT=setTimeout(()=>{try{yt.setVolume(VOL)}catch(e){}},1600)}
 function setWait(w){sndBtn.classList.toggle('wait',w);sndTip.classList.toggle('show',w)}
-function startMusic(){
+function isSilent(){try{return !yt||yt.isMuted()||yt.getPlayerState()!==1}catch(e){return true}}
+function startMusic(g){
  if(muted||!yt||!ytReady)return;
- try{yt.unMute();yt.setVolume(VOL);yt.playVideo()}catch(e){}
+ try{
+  if(g){yt.unMute();yt.setVolume(VOL);yt.playVideo();return}
+  // no gesture yet: start muted (always allowed), then try to unmute; if the browser refuses, keep playing muted
+  yt.mute();yt.playVideo();
+  setTimeout(()=>{if(muted)return;try{yt.unMute();yt.setVolume(VOL)}catch(e){}
+   setTimeout(()=>{try{if(yt.getPlayerState()!==1){yt.mute();yt.playVideo()}}catch(e){}if(isSilent()&&!muted)setWait(true);else setWait(false)},500)},300);
+ }catch(e){}
 }
 function unlock(){
  const c=actx();
  if(c&&c.state!=='running')c.resume().then(catchUpIntro).catch(()=>{});else catchUpIntro();
- if(!playing)startMusic();
+ if(!gotGesture||isSilent())startMusic(true);gotGesture=true;
 }
 // try to start audio immediately (succeeds where the browser allows autoplay)
 (function(){const c=actx();if(!c)return;
  c.onstatechange=()=>{if(c.state==='running')catchUpIntro()};
  if(c.state==='running')setTimeout(catchUpIntro,0);else c.resume().then(catchUpIntro).catch(()=>{});})();
-['pointerdown','touchend','keydown'].forEach(ev=>addEventListener(ev,unlock,{capture:true,passive:true}));
+['pointerdown','touchstart','touchend','click','keydown'].forEach(ev=>addEventListener(ev,unlock,{capture:true,passive:true}));
 sndBtn.addEventListener('click',e=>{
  e.stopPropagation();
  muted=!muted;sndBtn.classList.toggle('muted',muted);
  if(mg)mg.gain.value=muted?0:.85;
- if(yt&&ytReady){try{if(muted){yt.mute()}else{startMusic()}}catch(e){}}
+ if(yt&&ytReady){try{if(muted){yt.mute()}else{startMusic(true)}}catch(e){}}
  if(muted)setWait(false);
 });
 window.onYouTubeIframeAPIReady=function(){
  yt=new YT.Player('ytp',{
   width:'200',height:'200',videoId:VID,
-  playerVars:{autoplay:1,loop:1,playlist:VID,controls:0,disablekb:1,fs:0,modestbranding:1,rel:0,playsinline:1,iv_load_policy:3},
+  playerVars:{autoplay:1,mute:1,loop:1,playlist:VID,controls:0,disablekb:1,fs:0,modestbranding:1,rel:0,playsinline:1,iv_load_policy:3},
   events:{
-   onReady:()=>{ytReady=true;startMusic();setTimeout(()=>{if(!playing&&!muted)setWait(true)},1400)},
+   onReady:()=>{ytReady=true;startMusic(gotGesture);setTimeout(()=>{if(isSilent()&&!muted)setWait(true)},1800)},
    onStateChange:e=>{
     playing=e.data===1;
-    if(playing)setWait(false);
+    if(playing&&!isSilent())setWait(false);
     if(e.data===0){try{yt.seekTo(0);yt.playVideo()}catch(err){}}
    },
    onAutoplayBlocked:()=>{if(!muted)setWait(true)},
@@ -572,7 +619,7 @@ function drawPix(now){
   const g=c.createRadialGradient(0,0,0,0,0,R);
   g.addColorStop(0,'rgba(196,150,108,'+a.toFixed(3)+')');g.addColorStop(.5,'rgba(150,104,70,'+(a*.4).toFixed(3)+')');g.addColorStop(1,'rgba(120,80,50,0)');
   c.globalCompositeOperation='lighter';c.fillStyle=g;c.fillRect(-R,-R,2*R,2*R);c.restore();c.globalCompositeOperation='source-over'}
- const shP=new Path2D(),exP=new Path2D(),hi=new Path2D(),bk=[],fm=[];
+ const shP=new Path2D(),exP=new Path2D(),hi=new Path2D(),gl=new Path2D(),sw=new Path2D(),bk=[],fm=[];
  for(let i=0;i<NB;i++)bk.push(new Path2D());for(let i=0;i<8;i++)fm.push(new Path2D());
  let settled=0;
  for(let g=0;g<nT;g++){
@@ -586,6 +633,8 @@ function drawPix(now){
     shP.rect(X+sx,Y+sy,f,f);exP.rect(X+ex,Y+ey,f,f);
     const lum=clamp(.36+.28*q.c+.2*(1-q.v)+.13*Math.sin(q.y*.3+t*2.1+q.x*.045+g*.4)+(q.top?.07:0));
     bk[Math.min(NB-1,lum*NB|0)].rect(X,Y,f,f);if(q.top)hi.rect(X,Y,f,hb);
+    if(Math.pow(Math.max(0,Math.sin(q.x*.04-t*1.25+q.y*.012)),16)>.3)sw.rect(X,Y,f,f);
+    if(Math.sin(t*1.9+q.s*61)>.975)gl.rect(X-hb*1.5,Y-hb*1.5,f+hb*3,f+hb*3);
    }else{
     // rising from the wick like a curl of smoke, then condensing into the letter
     const sx0=wk[0]+Math.sin(q.s*53)*cs*2.5,sy0=wk[1],e1=ease(lp),e2=Math.pow(smooth(lp),1.4),
@@ -599,6 +648,8 @@ function drawPix(now){
  c.fillStyle='rgb(58,45,38)';c.fill(exP);
  for(let i=0;i<NB;i++){c.fillStyle=FACE[i];c.fill(bk[i])}
  c.fillStyle='rgba(255,248,236,.34)';c.fill(hi);
+ c.fillStyle='rgba(255,214,160,.34)';c.fill(sw);
+ c.fillStyle='rgba(255,232,186,.8)';c.fill(gl);
  for(let k=0;k<8;k++){const u=k/7;c.globalAlpha=.1+.62*u;c.fillStyle='rgb('+mixa(SMOKE0,SMOKE1,u)+')';c.fill(fm[k])}
  c.globalAlpha=1;
  // wisps drifting off the top of the settled words
@@ -638,7 +689,7 @@ function blowOut(){
  actx();if(ac&&ac.state!=='running')ac.resume().then(()=>{SFX.blow();SFX.hiss()}).catch(()=>{});else{SFX.blow();SFX.hiss()}
  hint.style.opacity=0;pre.classList.remove('rdy');
  document.body.classList.add('soft');
- typeT=setTimeout(()=>{state='msg';typeMsg()},1500);
+ fxBurst();typeT=setTimeout(()=>{state='msg';typeMsg();chime()},1500);
  resetT=setTimeout(()=>{hint.textContent='แตะเพื่อดูอีกครั้ง';hint.style.opacity=1;canReset=true;document.body.classList.add('rst')},10500);
 }
 function reset(){
@@ -660,6 +711,91 @@ document.body.addEventListener('click',e=>{
   const r=pre.getBoundingClientRect(),c=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
   if(c>=X0-2&&c<=X1+3&&y>=1&&y<=44)blowOut()}
  else if(state==='msg'&&canReset)reset()});
+/* ---------- Depth, light & colour layer ---------- */
+const fxc=document.getElementById('fx'),fxx=fxc.getContext('2d');
+let fw=0,fh=0,pmx=0,pmy=0,tmx=0,tmy=0,wL=0,cL=0,fxT=0;
+const FP=[],FB=[];
+function fxResize(){const d=Math.min(2,devicePixelRatio||1);fw=innerWidth;fh=innerHeight;fxc.width=fw*d;fxc.height=fh*d;fxx.setTransform(d,0,0,d,0,0)}
+fxResize();addEventListener('resize',fxResize);
+for(let i=0;i<54;i++){const z=Math.random();FP.push({x:Math.random(),y:Math.random(),z,r:.8+z*z*10,v:.008+z*.03,ph:Math.random()*6.28,h:Math.random()})}
+addEventListener('pointermove',e=>{tmx=(e.clientX/innerWidth-.5)*2;tmy=(e.clientY/innerHeight-.5)*2},{passive:true});
+addEventListener('deviceorientation',e=>{if(e.gamma==null)return;tmx=clamp(e.gamma/30,-1,1);tmy=clamp(((e.beta||0)-45)/30,-1,1)},{passive:true});
+function fxPos(){const r=pre.getBoundingClientRect();return{x:r.left+r.width*(CX/W),y:r.top+r.height*(11/H)}}
+function fxBurst(){
+ const p=fxPos();
+ for(let i=0;i<70;i++){const a=Math.random()*6.283,v=.6+Math.random()*3.2;FB.push({x:p.x,y:p.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1.2,l:1,s:1+Math.random()*2.6,h:16+Math.random()*32})}
+}
+function fxFrame(now){
+ requestAnimationFrame(fxFrame);
+ const dt=Math.min(50,now-(fxT||now));fxT=now;
+ pmx+=(tmx-pmx)*.06;pmy+=(tmy-pmy)*.06;
+ const el=now-T0,lit=entered&&state==='candle'?clamp((el-6400)/2200):0;
+ wL+=((state==='candle'?lit:0)-wL)*.05;
+ cL+=((state==='msg'||state==='out'?1:0)-cL)*.025;
+ // 3D tilt of the candle + parallax shift
+ const mg2=Math.hypot(pmx,pmy)||1;
+ pre.style.rotate=(-pmy)+' '+pmx+' 0 '+(Math.min(1,mg2)*5).toFixed(2)+'deg';
+ pre.style.translate=(pmx*-8).toFixed(1)+'px '+(pmy*-5).toFixed(1)+'px';
+ fxx.clearRect(0,0,fw,fh);fxx.globalCompositeOperation='lighter';
+ const fp=fxPos(),flk=.9+.07*Math.sin(now*.011)*Math.sin(now*.0043)+.03*Math.sin(now*.019);
+ // warm flame light, flickering
+ if(wL>.01){
+  const R=Math.max(fw,fh)*.62,gx=fp.x+pmx*-14,gy=fp.y+pmy*-10,g=fxx.createRadialGradient(gx,gy,0,gx,gy,R);
+  g.addColorStop(0,'rgba(255,176,84,'+(.30*wL*flk).toFixed(3)+')');g.addColorStop(.35,'rgba(214,104,34,'+(.12*wL*flk).toFixed(3)+')');g.addColorStop(1,'rgba(60,20,6,0)');
+  fxx.fillStyle=g;fxx.fillRect(0,0,fw,fh);
+ }
+ // after blow-out: slow colour-cycling aurora light
+ if(cL>.01){
+  const hh=(now*.01)%360;
+  [[.3,.42,0],[.72,.58,140]].forEach(([ax,ay,o],k)=>{
+   const gx=fw*ax+Math.sin(now*.0004+k*2)*fw*.12+pmx*-24,gy=fh*ay+Math.cos(now*.0005+k)*fh*.08,R=Math.max(fw,fh)*.5,
+    g=fxx.createRadialGradient(gx,gy,0,gx,gy,R);
+   g.addColorStop(0,'hsla('+(22+o*.12+10*Math.sin(now*.0006+k)).toFixed(0)+',80%,56%,'+(.13*cL).toFixed(3)+')');g.addColorStop(1,'hsla('+(22+o*.12+10*Math.sin(now*.0006+k)).toFixed(0)+',85%,40%,0)');
+   fxx.fillStyle=g;fxx.fillRect(0,0,fw,fh)});
+ }
+ // depth particles: far = small/slow/sharp, near = big/soft/fast parallax
+ for(const p of FP){
+  p.y-=p.v*dt/1000*(.6+.4*(1-cL));if(p.y<-.05){p.y=1.05;p.x=Math.random()}
+  const sx=(p.x+Math.sin(now*.0003+p.ph)*.02)*fw+pmx*-34*p.z,sy=p.y*fh+pmy*-22*p.z,
+   a=(.18+.5*p.z*p.z)*(.55+.45*Math.sin(now*.002+p.ph))*(.25+.75*Math.max(entered?1:0,0)),
+   hue=30+p.h*16,sat=90-cL*40,lig=60+cL*10;
+  const g=fxx.createRadialGradient(sx,sy,0,sx,sy,p.r);
+  g.addColorStop(0,'hsla('+hue.toFixed(0)+','+sat+'%,'+lig+'%,'+a.toFixed(3)+')');g.addColorStop(1,'hsla('+hue.toFixed(0)+','+sat+'%,'+lig+'%,0)');
+  fxx.fillStyle=g;fxx.beginPath();fxx.arc(sx,sy,p.r,0,6.283);fxx.fill();
+ }
+ // burst sparks when the candle is blown out
+ for(let i=FB.length-1;i>=0;i--){const b=FB[i];b.x+=b.vx;b.y+=b.vy;b.vy+=.03;b.vx*=.985;b.l-=dt/2600;if(b.l<=0){FB.splice(i,1);continue}
+  fxx.fillStyle='hsla('+b.h.toFixed(0)+',90%,68%,'+(b.l*.85).toFixed(3)+')';fxx.beginPath();fxx.arc(b.x,b.y,b.s*b.l+.4,0,6.283);fxx.fill()}
+ fxx.globalCompositeOperation='source-over';
+}
+requestAnimationFrame(fxFrame);
+/* extra sound: flame crackle while lit, sparkle chime on blow-out */
+setInterval(()=>{
+ if(!sOK()||!entered||state!=='candle'||performance.now()-T0<6600||Math.random()>.4)return;
+ const t=ac.currentTime,r=Math.random();
+ nz(t,.025+r*.04,'highpass',2200+r*3200,1400,1.1,.018+r*.03,.002);
+ if(r>.75)nz(t+.03,.05,'bandpass',900+r*900,500,2,.02,.002);
+},130);
+function chime(){
+ if(!sOK())return;const t=ac.currentTime+.05;
+ [523.25,659.25,783.99,987.77,1318.51,1567.98].forEach((f,i)=>{tone(t+i*.14,f,1.8,.028,'sine');tone(t+i*.14+.01,f*2,1.2,.008,'sine')});
+ nz(t,1.2,'highpass',5000,9000,.8,.012,.3);
+}
+(function(){
+ const en=document.getElementById('enter');
+ function go(e){
+  if(entered)return;
+  if(e&&e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ')return;
+  entered=true;T0=performance.now();
+  en.classList.add('go');
+  try{if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission)DeviceOrientationEvent.requestPermission().catch(()=>{})}catch(err){}
+  unlock();
+  setTimeout(()=>{try{if(!muted&&!isSilent())setWait(false)}catch(err){}},600);
+ }
+ en.addEventListener('pointerdown',go);
+ en.addEventListener('click',go);
+ en.addEventListener('keydown',go);
+})();
 requestAnimationFrame(loop);
 })();
 </script>
